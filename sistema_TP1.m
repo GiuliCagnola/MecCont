@@ -49,9 +49,23 @@ L = distancia(X, C);
 #K=[k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13 k14 k15]
 K=E*A./L;
 
-#-----Masas
-#M = [m1 m2 m3 m4 m5 m6 m7 m8 m9 m10 m11 m12 m13 m14 m15]
-M=rho*A.*L;
+#-----Masas de los resortes
+#M = [mr1 mr2 mr3 mr4 mr5 mr6 mr7 mr8 mr9 mr10 mr11 mr12 mr13 mr14 mr15]
+Mr=rho*A.*L;
+
+#-----Masas de los nodos (mitad de las masas de las barras que llegan al nodo)
+#Mn = [mn1 mn2 mn3 mn4 mn5 mn6 mn7 mn9 mn9 mn10]
+Mn = zeros(10,1);
+Mn(1) = (Mr(1) + Mr(3))/2;
+Mn(2) = (Mr(4) + Mr(5))/2;
+Mn(3) = (Mr(1) + Mr(2) + Mr(7))/2;
+Mn(4) = (Mr(2) + Mr(3) + Mr(4) + Mr(6) + Mr(10) + Mr(11))/2;
+Mn(5) = (Mr(5) + Mr(6) + Mr(9))/2;
+Mn(6) = Mr(15)/2;
+Mn(7) = Mr(14)/2;
+Mn(8) = (Mr(7) + Mr(8) + Mr(10) + Mr(12) + Mr(15))/2;
+Mn(9) = (Mr(8) + Mr(9) + Mr(11) + Mr(13) + Mr(14))/2;
+Mn(10) = (Mr(12) + Mr(13))/2;
 
 
 #-----Cálculo de fuerzas -> 3LN: Fij = -Fji
@@ -66,13 +80,13 @@ F_41 = -F_14;
 F_42 = -F_24;
 F_43 = -F_34;
 F_45 = fuerza(X(7:8), X(9:10), Y(7:8), Y(9:10), K(6));
-F_48 = fuerza(X(7:8), X(15:16), Y(7:8), Y(9:10), K(10));
+F_48 = fuerza(X(7:8), X(15:16), Y(7:8), Y(15:16), K(10));
 F_49 = fuerza(X(7:8), X(17:18), Y(7:8), Y(17:18), K(11));
 F_52 = -F_25;
 F_54 = -F_45;
 F_59 = fuerza(X(9:10), X(17:18), Y(9:10), Y(17:18), K(9));
 F_68 = fuerza(X(11:12), X(15:16), Y(11:12), Y(15:16), K(15));
-F_79 = fuerza(X(13:14), X(17:18), Y(13:14), Y(15:16), K(14));
+F_79 = fuerza(X(13:14), X(17:18), Y(13:14), Y(17:18), K(14));
 F_83 = -F_38;
 F_84 = -F_48;
 F_86 = -F_68;
@@ -91,19 +105,16 @@ dy = zeros(length(Y), 1);
 
 #-----Posiciones
 dy(1:2) = [0, 0]; #pos nodo1  fijo (x1_i = x1_f, y1_i = y1_f)
-dy(3:4) = (F_24(1) + F_25(1) + W(1))/M(2); #pos nodo2 movil en X, fijo en Y (y2_i = y2_f)
-dy(5:6) = (F_31 + F_34 + F_38)/M(3); #pos nodo3
-dy(7:8) = (F_41 + F_42 + F_43 + F_45 + F_48 + F_49)/M(4); #pos nodo4
-dy(9:10) = (F_52 + F_54 + F_59)/M(5); #pos nodo5
-dy(11:12) = F_68/M(6); #pos nodo6
-dy(13:14) = F_79/M(7); #pos nodo7
-dy(15:16) = (F_83 + F_84 + F_86 + F_89 + F_810)/M(8); #pos nodo8
-dy(17:18) = (F_94 + F_95 + F_97 + F_98 + F_910)/M(9); #pos nodo9
-dy(19:20) = (F_108 + F_109)/M(10); #pos nodo10
+dy(3) = (F_24(1) + F_25(1) + W(1))/Mn(2); #pos nodo2 movil en X
+dy(4) = 0; #pos nodo2 fijo en Y (y2_i = y2_f)
+dy(5:6) = (F_31 + F_34 + F_38)/Mn(3); #pos nodo3
+dy(7:8) = (F_41 + F_42 + F_43 + F_45 + F_48 + F_49)/Mn(4); #pos nodo4
+dy(9:10) = (F_52 + F_54 + F_59)/Mn(5); #pos nodo5
+dy(11:12) = F_68/Mn(6); #pos nodo6
+dy(13:14) = F_79/Mn(7); #pos nodo7
+dy(15:16) = (F_83 + F_84 + F_86 + F_89 + F_810)/Mn(8); #pos nodo8
+dy(17:18) = (F_94 + F_95 + F_97 + F_98 + F_910)/Mn(9); #pos nodo9
+dy(19:20) = (F_108 + F_109)/Mn(10); #pos nodo10
 
 #-----Velocidades
 dy(21:40) = Y(21:40); #v=dx
-
-
-
-
