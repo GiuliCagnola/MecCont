@@ -47,6 +47,7 @@ Y0=[X0, V0]; #posiciones y velocidades iniciales
 #-----Resolver el sistema (ode23, ode45, ode15s)
 #Y=[x1(t), y1(t), x2(t), y2(t), ... x10(t), y10(t), vx1(t), vy1(t), vx2(t), vy2(t), ... vx10(t), vy10(t)]
 [t, Y] = ode23(@sistema_TP1, [ti tf], Y0);
+n=length(t);
 
 #-----Graficar
 figure(1);
@@ -83,7 +84,7 @@ y_max = max(Y(:,2:2:end)(:)) + 5;
 
 #-----Animación
 figure(2);
-for i = 1:5:length(t)
+for i = 1:5:n
     clf;
     hold on;
 
@@ -122,7 +123,6 @@ ti = interseccion(t, Y, triangulos, tf);
 #gráfica de evolución de la tensión de la barra a y de la coordenada actual del nodo b
 
 #-----Fuerza sobre la barra 8
-n=length(t);
 for i = 1:n
    F(i) = norm(fuerza(X0(15:16), X0(17:18),Y(i,15:16), Y(i,17:18), K(8)));
 endfor
@@ -166,3 +166,28 @@ plot(t,Y(1:n, 20));
 title("Posicion Y nodo 10")
 xlabel("Tiempo (t)");
 ylabel("Posición (y)");
+
+#----------INCISO B.iii----------
+#Norma del vector desplazamiento máximo y en que instante se produce
+n_pos=length(Y0);
+for i=1:n_pos
+  delta(:,i) = abs(Y(:,i) - Y0(i));
+endfor
+
+#mag_delta es una matriz donde las filas son los valores de t y las columnas son los nodos
+mag_delta = zeros(length(t), 10);
+mag_delta(:,1)=0; #x1 fijo
+mag_delta(:,2)=0; #y1 fijo
+mag_delta(:,3)=delta(:,3); #delta(x2)
+mag_delta(:,4)=0; #y2 fijo
+cant=1;
+for i=5:2:n_pos-1
+  cant=cant+1;
+  for j=1:length(delta(:,i))
+    mag_delta(j, cant)=norm([delta(j,i), delta(j,i+1)]);
+  endfor
+endfor
+
+[delta_max ind] = max(mag_delta(:)); #máximo global
+[fila nodo] = ind2sub(size(mag_delta), ind); #convierte el indice en coords de la matriz
+tmax=t(fila);
