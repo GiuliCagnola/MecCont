@@ -10,13 +10,14 @@ function ti = interseccion(t, Y, triangulos, tmax)
   for k = 1:n_triangulos
     ind = triangulos(k, :);
     coords = Y(1, [2*ind(1)-1, 2*ind(1), 2*ind(2)-1, 2*ind(2), 2*ind(3)-1, 2*ind(3)]);
-    p = reshape(coords, 2, 3)';  # p = [x1 y1; x2 y2; x3 y3]
+    p = reshape(coords, 2, 3)';  # p = [x_k y_k; x_k+1 y_k+1; x_k+2 y_k+2]
     A0(k) = area_triangulo(p(1,:), p(2,:), p(3,:));
   endfor
 
   #-----Detectar el cambio de signo del área
   for i = 1:n_tiempo
     for j = 1:n_triangulos
+
       ind = triangulos(j,:);
       coords = Y(i, [2*ind(1)-1, 2*ind(1), 2*ind(2)-1, 2*ind(2), 2*ind(3)-1, 2*ind(3)]);
       p =  reshape(coords, 2, 3)';
@@ -32,7 +33,6 @@ function ti = interseccion(t, Y, triangulos, tmax)
   ti = tmax;
 
 endfunction
-
 
 
 
