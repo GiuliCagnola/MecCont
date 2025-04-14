@@ -4,9 +4,9 @@
 rho=1; #Densidad
 E=50; #Módulo de elasticidad longitudinal
 A=2; #Área de sección transversal
-W=[1.5 0]; #Carga uniforme con Wx=W, Wy=0
+f=5; #Frecuencia
+#W=[sin(f*t), 0]; #Carga variable
 #Barra a=8 y nodo b=10
-
 #-----Posiciones
 l=5;
 #X=[x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, x7, y7, x8, y8, x9, y9, x10, y10]
@@ -31,7 +31,7 @@ M=rho*A.*L;
 
 #-----Tiempo
 ti = 0;
-tf = 50;
+tf = 40;
 
 #-----Posiciones
 l=5;
@@ -109,8 +109,10 @@ for i = 1:5:n
     axis equal;
     grid on;
     drawnow;
-    pause(0.1);
+    pause(0.2);
 endfor
+
+#graficar los nodos 8 y 9
 
 
 #----------INCISO B.i----------
@@ -124,7 +126,7 @@ ti = interseccion(t, Y, triangulos, tf);
 
 #-----Fuerza sobre la barra 8
 for i = 1:n
-   F(i) = norm(fuerza(X0(15:16), X0(17:18),Y(i,15:16), Y(i,17:18), K(8)));
+   F(i) = norm(fuerza(X0(15:16), X0(17:18),Y(i,35:36), Y(i,37:38), K(8)));
 endfor
 
 figure(3)
@@ -136,8 +138,8 @@ xlabel("Tiempo (t)")
 ylabel("Fuerza (F)")
 
 #Dirección del vector tensión
-X8 = [Y(n, 15), Y(n, 16)];
-X9 = [Y(n, 17), Y(n, 18)];
+X8 = [Y(n, 35), Y(n, 36)];
+X9 = [Y(n, 37), Y(n, 38)];
 dir_barra8 = X9 - X8; #vector dirección
 u_barra8 = dir_barra8./norm(dir_barra8); #dirección normalizada
 
@@ -148,7 +150,7 @@ hold on
 grid on
 #Trayectoria xy
 subplot(3,1,1);
-plot(Y(1:n, 19), Y(1:n, 20));
+plot(Y(1:n, 39), Y(1:n, 40));
 title("Trayectoria nodo 10 (X vs Y)")
 xlabel("X");
 ylabel("Y");
@@ -156,13 +158,13 @@ axis equal
 grid on
 #Posición en x
 subplot(3,1,2);
-plot(t,Y(1:n, 19));
+plot(t,Y(1:n, 39));
 title("Posicion X nodo 10")
 xlabel("Tiempo (t)");
 ylabel("Posición (x)");
 #Posición en y
 subplot(3,1,3);
-plot(t,Y(1:n, 20));
+plot(t,Y(1:n, 40));
 title("Posicion Y nodo 10")
 xlabel("Tiempo (t)");
 ylabel("Posición (y)");
@@ -171,7 +173,7 @@ ylabel("Posición (y)");
 #Norma del vector desplazamiento máximo y en que instante se produce
 n_pos=length(Y0);
 for i=1:n_pos
-  delta(:,i) = abs(Y(:,i) - Y0(i));
+  delta(:,i) = abs(Y(:,i+20) - Y0(i)); #esto está mal :(
 endfor
 
 #mag_delta es una matriz donde las filas son los valores de t y las columnas son los nodos
@@ -191,3 +193,12 @@ endfor
 [delta_max ind] = max(mag_delta(:)); #máximo global
 [fila nodo] = ind2sub(size(mag_delta), ind); #convierte el indice en coords de la matriz
 tmax=t(fila);
+
+#GD
+#desp_max = 10.71
+#t_max = 40;
+
+#PD
+#desp_max = 27
+#t_max = 37;
+
