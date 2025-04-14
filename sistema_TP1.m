@@ -30,7 +30,8 @@ rho=1; #Densidad
 E=50; #Módulo de elasticidad longitudinal
 A=2; #Área de sección transversal
 W=[1.5 0]; #Carga uniforme con Wx=W, Wy=0
-#Barra a=8 y nodo b=10
+f=5; #Frecuencia
+#W=[sin(f*t), 0]; #Carga variable
 
 #-----Posiciones
 l=5;
@@ -103,18 +104,18 @@ F_109 = -F_910;
 #-----Armado del sistema-----
 dy = zeros(length(Y), 1);
 
-#-----Posiciones
-dy(1:2) = [0, 0]; #pos nodo1  fijo (x1_i = x1_f, y1_i = y1_f)
-dy(3) = (F_24(1) + F_25(1) + W(1))/Mn(2); #pos nodo2 movil en X
-dy(4) = 0; #pos nodo2 fijo en Y (y2_i = y2_f)
-dy(5:6) = (F_31 + F_34 + F_38)/Mn(3); #pos nodo3
-dy(7:8) = (F_41 + F_42 + F_43 + F_45 + F_48 + F_49)/Mn(4); #pos nodo4
-dy(9:10) = (F_52 + F_54 + F_59)/Mn(5); #pos nodo5
-dy(11:12) = F_68/Mn(6); #pos nodo6
-dy(13:14) = F_79/Mn(7); #pos nodo7
-dy(15:16) = (F_83 + F_84 + F_86 + F_89 + F_810)/Mn(8); #pos nodo8
-dy(17:18) = (F_94 + F_95 + F_97 + F_98 + F_910)/Mn(9); #pos nodo9
-dy(19:20) = (F_108 + F_109)/Mn(10); #pos nodo10
-
 #-----Velocidades
-dy(21:40) = Y(21:40); #v=dx
+dy(1:20) = Y(21:40); #v=dx
+
+#-----Posiciones
+dy(21:22) = [0, 0]; #pos nodo1  fijo (x1_i = x1_f, y1_i = y1_f)
+dy(23) = (F_24(1) + F_25(1) + W(1))/Mn(2); #pos nodo2 movil en x
+dy(24) = 0; #pos nodo2 fijo en Y (y2_i = y2_f)
+dy(25:26) = (F_31 + F_34 + F_38)/Mn(3); #pos nodo3
+dy(27:28) = (F_41 + F_42 + F_43 + F_45 + F_48 + F_49)/Mn(4); #pos nodo4
+dy(29:30) = (F_52 + F_54 + F_59)/Mn(5); #pos nodo5
+dy(31:32) = F_68/Mn(6); #pos nodo6
+dy(33:34) = F_79/Mn(7); #pos nodo7
+dy(35:36) = (F_83 + F_84 + F_86 + F_89 + F_810)/Mn(8); #pos nodo8
+dy(37:38) = (F_94 + F_95 + F_97 + F_98 + F_910)/Mn(9); #pos nodo9
+dy(39:40) = (F_108 + F_109)/Mn(10); #pos nodo10
