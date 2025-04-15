@@ -31,7 +31,7 @@ M=rho*A.*L;
 
 #-----Tiempo
 ti = 0;
-tf = 40;
+tf = 50;
 
 #-----Posiciones
 l=5;
@@ -84,24 +84,43 @@ y_max = max(Y(:,2:2:end)(:)) + 5;
 
 #-----Animación
 figure(2);
+n_nodos = size(Y, 2) / 2;
 for i = 1:5:n
     clf;
     hold on;
+    #Dibujar los resortes
+    for r = 1:size(C, 1)
+        i1 = C(r, 1);
+        i2 = C(r, 2);
 
+        x1 = Y(i, 2*i1 - 1);  y1 = Y(i, 2*i1);
+        x2 = Y(i, 2*i2 - 1);  y2 = Y(i, 2*i2);
+
+        plot([x1, x2], [y1, y2], '-', 'Color', [0 0 0], 'LineWidth', 2);
+    endfor
+
+    #Dibujar los triángulos
     for k = 1:n_triangulos
         ind = triangulos(k,:);
         coords = Y(i, [2*ind(1)-1, 2*ind(1), 2*ind(2)-1, 2*ind(2), 2*ind(3)-1, 2*ind(3)]);
         p = reshape(coords, 2, 3)';
-        A = area_triangulo(p(1,:), p(2,:), p(3,:));
 
+        A = area_triangulo(p(1,:), p(2,:), p(3,:));
         if A * A0(k) < 0
-            c = [1 0 0]; # rojo
+            c = [1 0 0]; #rojo
         else
-            c = [0 1 0]; # verde
+            c = [0 1 0]; #verde
         endif
 
         fill(p(:,1), p(:,2), c, 'FaceAlpha', 0.6);
         text(mean(p(:,1)), mean(p(:,2)), num2str(k), 'FontSize', 10, 'Color', 'k');
+    endfor
+
+    #Dibujar los nodos
+    for j = 1:n_nodos
+        x = Y(i, 2*j - 1);
+        y = Y(i, 2*j);
+        plot(x, y, 'ko', 'MarkerFaceColor', 'k', 'MarkerSize', 4);
     endfor
 
     title(sprintf('Tiempo: %.2f', t(i)));
@@ -112,7 +131,6 @@ for i = 1:5:n
     pause(0.2);
 endfor
 
-#graficar los nodos 8 y 9
 
 
 #----------INCISO B.i----------
@@ -144,6 +162,7 @@ dir_barra8 = X9 - X8; #vector dirección
 u_barra8 = dir_barra8./norm(dir_barra8); #dirección normalizada
 
 
+
 #-----Posición del nodo 10
 figure(4)
 hold on
@@ -171,9 +190,10 @@ ylabel("Posición (y)");
 
 #----------INCISO B.iii----------
 #Norma del vector desplazamiento máximo y en que instante se produce
-n_pos=length(Y0);
+
+n_pos=length(Y0)/2; #tomo las posiciones
 for i=1:n_pos
-  delta(:,i) = abs(Y(:,i+20) - Y0(i)); #esto está mal :(
+  delta(:,i) = abs(Y(:,i+20) - Y0(i));
 endfor
 
 #mag_delta es una matriz donde las filas son los valores de t y las columnas son los nodos
@@ -197,8 +217,10 @@ tmax=t(fila);
 #GD
 #desp_max = 10.71
 #t_max = 40;
+#nodo 2
 
 #PD
-#desp_max = 27
+#desp_max = 27,094
 #t_max = 37;
+#nodo 6
 
