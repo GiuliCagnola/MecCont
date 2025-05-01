@@ -64,7 +64,7 @@ CI.L = L;
 CI.K = K;
 CI.W = W;
 CI.Mn = Mn;
-CI.TipoDef = 2; # 1: grandes deformaciones, 2: pequeñas deformaciones
+CI.TipoDef = 1; # 1: grandes deformaciones, 2: pequeñas deformaciones
 
 #-----Resolver el sistema (ode23, ode45, ode15s)
 #Y=[x1(t), y1(t), x2(t), y2(t), ... x10(t), y10(t), vx1(t), vy1(t), vx2(t), vy2(t), ... vx10(t), vy10(t)]
@@ -154,8 +154,8 @@ ti = interseccion(t, Y, triangulos, tf);
 
 #-----Fuerza sobre la barra 8
 for i = 1:n
-   F(i) = norm(fuerza(X0(15:16), X0(17:18),Y(i,35:36), Y(i,37:38), K(8)));
-   F(i) = norm(fuerza(X0(15:16), X0(17:18),Y(i,35:36), Y(i,37:38), K(8)));
+   F(i) = norm(fuerza(X0(15:16), X0(17:18),Y(i,35:36), Y(i,37:38), K(8), CI.TipoDef));
+   F(i) = norm(fuerza(X0(15:16), X0(17:18),Y(i,35:36), Y(i,37:38), K(8), CI.TipoDef));
 endfor
 
 figure(3)
