@@ -1,10 +1,9 @@
-function F = fuerza(x_i0, x_j0, x_i, x_j, k)
-  metodo = 1; % 1: grandes deformaciones, 2: pequeñas deformaciones
+function F = fuerza(x_i0, x_j0, x_i, x_j, k, TipoDef)
 
-  if (metodo == 1)  % Grandes deformaciones
+  if (TipoDef == 1)  % Grandes deformaciones
     F = k * (norm(x_j - x_i) - norm(x_j0 - x_i0)) * ((x_j - x_i) / norm(x_j - x_i));
 
-  elseif (metodo == 2)  % Pequeñas deformaciones
+  elseif (TipoDef == 2)  % Pequeñas deformaciones
     F = k * ((norm(x_j - x_i) / norm(x_j0 - x_i0)) - 1) * (x_j0 - x_i0);
 
   else
