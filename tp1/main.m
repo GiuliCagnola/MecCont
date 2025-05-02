@@ -151,9 +151,11 @@ for i = 1:n
     p3 = Y(i, [2*n3-1, 2*n3]);
     A = 0.5 * det([p2 - p1; p3 - p1]);
     c = (A * A0(k) < 0) * [1 0 0] + (A * A0(k) >= 0) * [0 1 0];
-    set(h(k), 'xdata', [p1(1), p2(1), p3(1)], ...
-              'ydata', [p1(2), p2(2), p3(2)], ...
-              'facecolor', c);
+    set(h(k), 'xdata', [p1(1), p2(1), p3(1)],
+          'ydata', [p1(2), p2(2), p3(2)],
+          'facecolor', c,
+          'FaceAlpha', 0.6
+          );
   endfor
   
   % Sueltos
@@ -161,10 +163,11 @@ for i = 1:n
     n1 = sueltos(k, 1); n2 = sueltos(k, 2);
     p1 = Y(i, [2*n1-1, 2*n1]);
     p2 = Y(i, [2*n2-1, 2*n2]);
-    set(h_sueltos(k), 'xdata', [p1(1), p2(1)], ...
+    set(h_sueltos(k), 'xdata', [p1(1), p2(1)],
                       'ydata', [p1(2), p2(2)]);
   endfor
-endfor
+  title(sprintf('Tiempo: %.2f', t(i)));
+  endfor
 
 
 
