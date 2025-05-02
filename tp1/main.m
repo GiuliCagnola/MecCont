@@ -85,7 +85,8 @@ triangulos = [1 3 4;  # T1
               3 8 4;  # T3
               4 8 9;  # T4
               4 9 5;  # T5
-              8 10 9]; # T6
+              8 10 9  # T6
+              ]; 
 
 #-----Calcular áreas iniciales
 n_triangulos = size(triangulos,1);
@@ -104,38 +105,41 @@ y_min = 0;
 y_max = 40;
 
 #-----Animación
-figure(2);
+figure(2)
+axis([x_min x_max y_min y_max])
+hold on; grid on;
+title('Movimiento del reticulado')
+xlabel('Posición (x)');
+ylabel('Posición (y)');
 n_nodos = size(Y, 2) / 2;
-for i = 1:5:n
-    clf;
-    hold on;
-    for r = 1:size(C, 1)
-        i1 = C(r, 1);
-        i2 = C(r, 2);
-        x1 = Y(i, 2*i1 - 1);  y1 = Y(i, 2*i1);
-        x2 = Y(i, 2*i2 - 1);  y2 = Y(i, 2*i2);
-        plot([x1, x2], [y1, y2], '-', 'Color', [0 0 0], 'LineWidth', 2);
-    endfor
-    for k = 1:n_triangulos
-        ind = triangulos(k,:);
-        coords = Y(i, [2*ind(1)-1, 2*ind(1), 2*ind(2)-1, 2*ind(2), 2*ind(3)-1, 2*ind(3)]);
-        p = reshape(coords, 2, 3)';
-        A = signo_area_triangulo(p(1,:), p(2,:), p(3,:));
-        c = (A * A0(k) < 0) * [1 0 0] + (A * A0(k) >= 0) * [0 1 0];
-        fill(p(:,1), p(:,2), c, 'FaceAlpha', 0.6);
-        text(mean(p(:,1)), mean(p(:,2)), num2str(k), 'FontSize', 10, 'Color', 'k');
-    endfor
-    for j = 1:n_nodos
-        x = Y(i, 2*j - 1);
-        y = Y(i, 2*j);
-        plot(x, y, 'ko', 'MarkerFaceColor', 'k', 'MarkerSize', 4);
-    endfor
-    title(sprintf('Tiempo: %.2f', t(i)));
-    axis([x_min x_max y_min y_max]);
-    axis equal;
-    grid on;
-    drawnow;
+
+h = [];
+A0 = zeros(size(triangulos,1), 1);
+for k = 1:size(triangulos, 1)
+  n1 = triangulos(k,1); n2 = triangulos(k,2); n3 = triangulos(k,3);
+  p1 = Y(1, [2*n1-1, 2*n1]);
+  p2 = Y(1, [2*n2-1, 2*n2]);
+  p3 = Y(1, [2*n3-1, 2*n3]);
+  A0(k) = 0.5 * det([p2 - p1; p3 - p1]);
+  h(end+1) = fill([p1(1), p2(1), p3(1)], [p1(2), p2(2), p3(2)], 'g');
 endfor
+
+for i = 1:n
+  pause(0.01);
+  for k = 1:size(triangulos, 1)
+    n1 = triangulos(k,1); n2 = triangulos(k,2); n3 = triangulos(k,3);
+    p1 = Y(i, [2*n1-1, 2*n1]);
+    p2 = Y(i, [2*n2-1, 2*n2]);
+    p3 = Y(i, [2*n3-1, 2*n3]);
+    A = 0.5 * det([p2 - p1; p3 - p1]);
+    c = (A * A0(k) < 0) * [1 0 0] + (A * A0(k) >= 0) * [0 1 0];
+    set(h(k), 'xdata', [p1(1), p2(1), p3(1)], ...
+              'ydata', [p1(2), p2(2), p3(2)], ...
+              'facecolor', c);
+  endfor
+  
+endfor
+
 
 
 

@@ -33,10 +33,6 @@ TipoDef = CI.TipoDef; # 1: grandes deformaciones, 2: pequeñas deformaciones
 X = X0;
 
 
-# -----Carga variable para inciso C------#
-f=5; #Frecuencia
-#W= 50 * [sin(f*t), 0]; #Carga variable
-
 #-----Cálculo de fuerzas -> 3LN: Fij = -Fji
 F_13 = fuerza(X(1:2), X(5:6), Y(1:2), Y(5:6), K(1),TipoDef);
 F_14 = fuerza(X(1:2), X(7:8), Y(1:2), Y(7:8), K(3),TipoDef);
@@ -90,16 +86,3 @@ dy(35:36) = (F_83 + F_84 + F_86 + F_89 + F_810)/Mn(8); #pos nodo8
 dy(37:38) = (F_94 + F_95 + F_97 + F_98 + F_910)/Mn(9); #pos nodo9
 dy(39:40) = (F_108 + F_109)/Mn(10); #pos nodo10
 dy(1:20) = Y(21:40); #v=dx
-
-#-----Posiciones
-dy(21:22) = [0, 0]; #pos nodo1  fijo (x1_i = x1_f, y1_i = y1_f)
-dy(23) = (F_24(1) + F_25(1) + W(1))/Mn(2); #pos nodo2 movil en x
-dy(24) = 0; #pos nodo2 fijo en Y (y2_i = y2_f)
-dy(25:26) = (F_31 + F_34 + F_38)/Mn(3); #pos nodo3
-dy(27:28) = (F_41 + F_42 + F_43 + F_45 + F_48 + F_49)/Mn(4); #pos nodo4
-dy(29:30) = (F_52 + F_54 + F_59)/Mn(5); #pos nodo5
-dy(31:32) = F_68/Mn(6); #pos nodo6
-dy(33:34) = F_79/Mn(7); #pos nodo7
-dy(35:36) = (F_83 + F_84 + F_86 + F_89 + F_810)/Mn(8); #pos nodo8
-dy(37:38) = (F_94 + F_95 + F_97 + F_98 + F_910)/Mn(9); #pos nodo9
-dy(39:40) = (F_108 + F_109)/Mn(10); #pos nodo10
