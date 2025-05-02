@@ -33,6 +33,10 @@ TipoDef = CI.TipoDef; # 1: grandes deformaciones, 2: pequeñas deformaciones
 X = X0;
 
 
+# -----Carga variable para inciso C------#
+f=5; #Frecuencia
+#W= 50 * [sin(f*t), 0]; #Carga variable
+
 #-----Cálculo de fuerzas -> 3LN: Fij = -Fji
 F_13 = fuerza(X(1:2), X(5:6), Y(1:2), Y(5:6), K(1),TipoDef);
 F_14 = fuerza(X(1:2), X(7:8), Y(1:2), Y(7:8), K(3),TipoDef);

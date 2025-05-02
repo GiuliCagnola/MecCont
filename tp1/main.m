@@ -25,8 +25,7 @@ rho=1; #Densidad
 E=50; #Módulo de elasticidad longitudinal
 A=2; #Área de sección transversal
 W=[1.5 0]; #Carga uniforme con Wx=W, Wy=0
-#f=5; #Frecuencia
-#W=[sin(f*t), 0]; #Carga variable
+
 #Barra a=8 y nodo b=10
 
 # Calcular L (longitud) para cada barra
@@ -53,8 +52,6 @@ Mn = masas_nodos(C, Mr, length(X)/2); #Mn = [mn1 mn2 ... mn10]
 ti = 0;
 tf = 50;
 #---------------------------#
-
-
 Y0=[X0, V0]; #posiciones y velocidades iniciales
 
 # empaquetar las condiciones iniciales para pasarlas a la función del sistema
