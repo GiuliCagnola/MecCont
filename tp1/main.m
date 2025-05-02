@@ -86,7 +86,10 @@ triangulos = [1 3 4;  # T1
               4 8 9;  # T4
               4 9 5;  # T5
               8 10 9  # T6
-              ]; 
+              ];
+              
+sueltos = [6 8;
+           7 9];
 
 #-----Calcular áreas iniciales
 n_triangulos = size(triangulos,1);
@@ -115,6 +118,8 @@ n_nodos = size(Y, 2) / 2;
 
 h = [];
 A0 = zeros(size(triangulos,1), 1);
+
+# Inicializar Triangulos
 for k = 1:size(triangulos, 1)
   n1 = triangulos(k,1); n2 = triangulos(k,2); n3 = triangulos(k,3);
   p1 = Y(1, [2*n1-1, 2*n1]);
@@ -124,8 +129,21 @@ for k = 1:size(triangulos, 1)
   h(end+1) = fill([p1(1), p2(1), p3(1)], [p1(2), p2(2), p3(2)], 'g');
 endfor
 
+# Inicializar los no Triangulos
+h_sueltos = [];
+for k = 1:size(sueltos, 1)
+  n1 = sueltos(k, 1); n2 = sueltos(k, 2);
+  p1 = Y(1, [2*n1-1, 2*n1]);
+  p2 = Y(1, [2*n2-1, 2*n2]);
+  h_sueltos(end+1) = plot([p1(1), p2(1)], [p1(2), p2(2)], 'k', 'LineWidth', 1);
+endfor
+
+
+# Actualizar
 for i = 1:n
   pause(0.01);
+
+  # Triangulos
   for k = 1:size(triangulos, 1)
     n1 = triangulos(k,1); n2 = triangulos(k,2); n3 = triangulos(k,3);
     p1 = Y(i, [2*n1-1, 2*n1]);
@@ -138,6 +156,14 @@ for i = 1:n
               'facecolor', c);
   endfor
   
+  % Sueltos
+  for k = 1:size(sueltos, 1)
+    n1 = sueltos(k, 1); n2 = sueltos(k, 2);
+    p1 = Y(i, [2*n1-1, 2*n1]);
+    p2 = Y(i, [2*n2-1, 2*n2]);
+    set(h_sueltos(k), 'xdata', [p1(1), p2(1)], ...
+                      'ydata', [p1(2), p2(2)]);
+  endfor
 endfor
 
 
