@@ -77,7 +77,7 @@ for i = 1:2:20
   nodo = (i+1)/2;
   x = Y(:,i);
   y = Y(:,i+1);
-  pos = sqrt(x.^2 + y.^2);  % norma de la posición
+  pos = sqrt(x.^2 + y.^2);  
   plot(t, pos, 'DisplayName', sprintf("Nodo %d", nodo));
 endfor
 
