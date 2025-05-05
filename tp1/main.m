@@ -70,13 +70,21 @@ CI.TipoDef = 1; # 1: grandes deformaciones, 2: pequeñas deformaciones
 n=length(t);
 
 #-----Graficar
+figure(1);
 hold on;
 grid on;
-plot(t, Y);
-title("...");
-xlabel("Tiempo t");
-ylabel("Y");
-figure();
+for i = 1:2:20
+  nodo = (i+1)/2;
+  x = Y(:,i);
+  y = Y(:,i+1);
+  pos = sqrt(x.^2 + y.^2);  % norma de la posición
+  plot(t, pos, 'DisplayName', sprintf("Nodo %d", nodo));
+endfor
+
+xlabel("Tiempo (t)");
+ylabel("Posición");
+title("Posición (x,y) vs t");
+legend show;
 
 
 #-----Triangulación
