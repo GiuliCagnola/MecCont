@@ -116,6 +116,9 @@ y_min = 0;
 y_max = 40;
 
 #-----Animación
+out_dir = 'output_images';  % En este directorio se guardaran las imagenes de la animacion
+mkdir(out_dir);  % Esto lo crea si no existe
+
 figure(2)
 axis([x_min x_max y_min y_max])
 hold on; grid on;
@@ -175,10 +178,27 @@ for i = 1:n
                       'ydata', [p1(2), p2(2)]);
   endfor
   title(sprintf('Tiempo: %.2f', t(i)));
-  endfor
+
+  # Guardar el cuadro actual como imagen
+  fname = fullfile(out_dir, sprintf("img%03i.png", i));
+  imwrite(getframe(gcf).cdata, fname);
+endfor
 
 
+palette_file = fullfile(out_dir, "palette.png");
 
+# Generate palette
+cmd_palette = sprintf("ffmpeg -i %s/img%%03d.png -vf palettegen %s", out_dir, palette_file);
+system(cmd_palette);
+
+# Crear el gif usando ffmpeg (tienen que instalarlo usando sudo apt-get install ffmpeg)
+if exist(out_dir, 'dir') && exist(palette_file, 'file')
+  cmd = sprintf("ffmpeg -framerate 30 -i %s/img%%03d.png -i %s -lavfi paletteuse tp1.gif", out_dir, palette_file);
+  system(cmd);
+else
+  error("Output directory or palette file does not exist. Ensure images and palette are generated correctly.");
+end
+system(cmd);
 
 
 #----------INCISO B.i----------
