@@ -268,12 +268,12 @@ endfor
 tmax=t(fila);
 
 #GD
-#desp_max = 10.71
-#t_max = 40;
-#nodo 2
+#delta_max = 27.452
+#tmax = 48.823
+#nodo 9
 
 #PD
-#desp_max = 27,094
-#t_max = 37;
-#nodo 6
+#delta_max = 1.3261e+10
+#tmax = 50
+#nodo 5
 
