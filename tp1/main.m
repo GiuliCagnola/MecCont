@@ -185,8 +185,12 @@ ti = interseccion(t, Y, triangulos, tf);
 #-----Fuerza sobre la barra 8
 for i = 1:n
    F(i) = norm(fuerza(X0(15:16), X0(17:18),Y(i,35:36), Y(i,37:38), K(8), CI.TipoDef));
-   F(i) = norm(fuerza(X0(15:16), X0(17:18),Y(i,35:36), Y(i,37:38), K(8), CI.TipoDef));
 endfor
+
+[Fmax, imax] = max(F); #Fuerza máxima
+t_Fmax = t(imax);
+[Fmin, imin] = min(F); #Fuerza mínima
+t_Fmin = t(imin);
 
 figure(3)
 hold on
@@ -203,6 +207,9 @@ X8 = [Y(n, 35), Y(n, 36)];
 X9 = [Y(n, 37), Y(n, 38)];
 dir_barra8 = X9 - X8; #vector dirección
 u_barra8 = dir_barra8./norm(dir_barra8); #dirección normalizada
+
+#En grandes deformaciones, el vector de tensión sigue la dirección de la fuerza de las barras
+#En pequeñas deformaciones, sigue la dirección de la configuración de referenci
 
 
 
