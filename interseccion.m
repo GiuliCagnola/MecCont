@@ -21,7 +21,7 @@ function ti = interseccion(t, Y, triangulos, tmax)
       ind = triangulos(j,:);
       coords = Y(i, [2*ind(1)-1, 2*ind(1), 2*ind(2)-1, 2*ind(2), 2*ind(3)-1, 2*ind(3)]);
       p =  reshape(coords, 2, 3)';
-      A = area_triangulo(p(1,:), p(2,:), p(3,:));
+      A = signo_area_triangulo(p(1,:), p(2,:), p(3,:));
 
       if A * A0(j) < 0
         ti = t(i);

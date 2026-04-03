@@ -1,19 +1,12 @@
-function F = fuerza(xi_0, xj_0, xi, xj, k)
+function F = fuerza(x_i0, x_j0, x_i, x_j, k, TipoDef)
 
-  #(xi_0, xj_0) = posición inicial
-  #(xi, xj) = posición final (después de la deformación)
-  #k = constante elástica del resorte
-  #F = [Fx, Fy] -> fuerza resultante
+  if (TipoDef == 1)  % Grandes deformaciones
+    F = k * (norm(x_j - x_i) - norm(x_j0 - x_i0)) * ((x_j - x_i) / norm(x_j - x_i));
 
-  L0 = sqrt((xj_0(1) - xi_0(1))^2 + (xj_0(2) - xi_0(2))^2);
-  L = sqrt((xj(1) - xi(1))^2 + (xj(2) - xi(2))^2);
-  
-  #-----Grandes deformaciones
-  Fesc = k*(1-L0/L);
-  F(1) = Fesc*(xj(1) - xi(1)); #Fx
-  F(2) = Fesc*(xj(2) - xi(2)); #Fy
+  elseif (TipoDef == 2)  % Pequeñas deformaciones
+    F = k * ((norm(x_j - x_i) / norm(x_j0 - x_i0)) - 1) * (x_j0 - x_i0);
 
-  #-----Pequeñas deformaciones
-  #Fesc = k*(L/L0-1);
-  #F(1) = Fesc*(xj_0(1) - xi_0(1)); #Fx
-  #F(2) = Fesc*(xj_0(2) - xi_0(2)); #Fy
+  else
+    error("Método no reconocido. Usar 1 para grandes deformaciones o 2 para pequeñas deformaciones.");
+  endif
+endfunction

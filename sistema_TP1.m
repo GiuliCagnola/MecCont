@@ -21,83 +21,53 @@
 #19) v9 = dx9
 #20) v10 = dx10
 
-function dy = sistema_TP1(t, Y)
-
+function dy = sistema_TP1(t, Y, CI)
 #-----Condiciones iniciales-----
+X0 = CI.X0;
+C = CI.C;
+L = CI.L;
+Mn = CI.Mn;
+K = CI.K;
+W = CI.W;
+TipoDef = CI.TipoDef; # 1: grandes deformaciones, 2: pequeñas deformaciones
+X = X0;
 
-#-----Barra
-rho=1; #Densidad
-E=50; #Módulo de elasticidad longitudinal
-A=2; #Área de sección transversal
-W=[1.5 0]; #Carga uniforme con Wx=W, Wy=0
+
+# -----Carga variable para inciso C------#
 f=5; #Frecuencia
-#W=[sin(f*t), 0]; #Carga variable
-
-#-----Posiciones
-l=5;
-#X=[x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, x7, y7, x8, y8, x9, y9, x10, y10]
-X = [0, 0, 2*l, 0, l, 2*l, 2*l, 2*l, 3*l, 2*l, 0, 3*l, 4*l, 3*l, l, 4*l, 3*l, 4*l, 2*l, 5*l];
-
-#-----Conectividades
-C = [1 3; 3 4; 4 1; 4 2; 2 5; 5 4; 3 8; 8 9; 9 5; 8 4; 4 9; 8 10; 10 9; 9 7; 8 6];
-
-#-----Resortes
-
-#Calcular L (longitud) para cada barra
-#L=[L0 L1 L2 L3 L4 L5 L6 L7 L8 L9 L10 L11 L12 L13 L14 L15]
-L = distancia(X, C);
-
-#K=[k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13 k14 k15]
-K=E*A./L;
-
-#-----Masas de los resortes
-#M = [mr1 mr2 mr3 mr4 mr5 mr6 mr7 mr8 mr9 mr10 mr11 mr12 mr13 mr14 mr15]
-Mr=rho*A.*L;
-
-#-----Masas de los nodos (mitad de las masas de las barras que llegan al nodo)
-#Mn = [mn1 mn2 mn3 mn4 mn5 mn6 mn7 mn9 mn9 mn10]
-Mn = zeros(10,1);
-Mn(1) = (Mr(1) + Mr(3))/2;
-Mn(2) = (Mr(4) + Mr(5))/2;
-Mn(3) = (Mr(1) + Mr(2) + Mr(7))/2;
-Mn(4) = (Mr(2) + Mr(3) + Mr(4) + Mr(6) + Mr(10) + Mr(11))/2;
-Mn(5) = (Mr(5) + Mr(6) + Mr(9))/2;
-Mn(6) = Mr(15)/2;
-Mn(7) = Mr(14)/2;
-Mn(8) = (Mr(7) + Mr(8) + Mr(10) + Mr(12) + Mr(15))/2;
-Mn(9) = (Mr(8) + Mr(9) + Mr(11) + Mr(13) + Mr(14))/2;
-Mn(10) = (Mr(12) + Mr(13))/2;
-
+#W=  [50 * sin(f*t), 0]; #Carga variable
 
 #-----Cálculo de fuerzas -> 3LN: Fij = -Fji
-F_13 = fuerza(X(1:2), X(5:6), Y(1:2), Y(5:6), K(1));
-F_14 = fuerza(X(1:2), X(7:8), Y(1:2), Y(7:8), K(3));
-F_24 = fuerza(X(3:4), X(7:8), Y(3:4), Y(7:8), K(4));
-F_25 = fuerza(X(3:4), X(9:10), Y(3:4), Y(9:10), K(5));
+F_13 = fuerza(X(1:2), X(5:6), Y(1:2), Y(5:6), K(1),TipoDef);
+F_14 = fuerza(X(1:2), X(7:8), Y(1:2), Y(7:8), K(3),TipoDef);
+F_24 = fuerza(X(3:4), X(7:8), Y(3:4), Y(7:8), K(4),TipoDef);
+F_25 = fuerza(X(3:4), X(9:10), Y(3:4), Y(9:10), K(5),TipoDef);
 F_31 = -F_13;
-F_34 = fuerza(X(5:6), X(7:8), Y(5:6), Y(7:8), K(2));
-F_38 = fuerza(X(5:6), X(15:16), Y(5:6), Y(15:16), K(7));
+F_34 = fuerza(X(5:6), X(7:8), Y(5:6), Y(7:8), K(2),TipoDef);
+F_38 = fuerza(X(5:6), X(15:16), Y(5:6), Y(15:16), K(7),TipoDef);
 F_41 = -F_14;
 F_42 = -F_24;
 F_43 = -F_34;
-F_45 = fuerza(X(7:8), X(9:10), Y(7:8), Y(9:10), K(6));
-F_48 = fuerza(X(7:8), X(15:16), Y(7:8), Y(15:16), K(10));
-F_49 = fuerza(X(7:8), X(17:18), Y(7:8), Y(17:18), K(11));
+F_45 = fuerza(X(7:8), X(9:10), Y(7:8), Y(9:10), K(6),TipoDef);
+F_48 = fuerza(X(7:8), X(15:16), Y(7:8), Y(15:16), K(10),TipoDef);
+F_48 = fuerza(X(7:8), X(15:16), Y(7:8), Y(15:16), K(10),TipoDef);
+F_49 = fuerza(X(7:8), X(17:18), Y(7:8), Y(17:18), K(11),TipoDef);
 F_52 = -F_25;
 F_54 = -F_45;
-F_59 = fuerza(X(9:10), X(17:18), Y(9:10), Y(17:18), K(9));
-F_68 = fuerza(X(11:12), X(15:16), Y(11:12), Y(15:16), K(15));
-F_79 = fuerza(X(13:14), X(17:18), Y(13:14), Y(17:18), K(14));
+F_59 = fuerza(X(9:10), X(17:18), Y(9:10), Y(17:18), K(9),TipoDef);
+F_68 = fuerza(X(11:12), X(15:16), Y(11:12), Y(15:16), K(15),TipoDef);
+F_79 = fuerza(X(13:14), X(17:18), Y(13:14), Y(17:18), K(14),TipoDef);
+F_79 = fuerza(X(13:14), X(17:18), Y(13:14), Y(17:18), K(14),TipoDef);
 F_83 = -F_38;
 F_84 = -F_48;
 F_86 = -F_68;
-F_89 = fuerza(X(15:16), X(17:18), Y(15:16), Y(17:18), K(8));
-F_810 = fuerza(X(15:16), X(19:20), Y(15:16), Y(19:20), K(12));
+F_89 = fuerza(X(15:16), X(17:18), Y(15:16), Y(17:18), K(8),TipoDef);
+F_810 = fuerza(X(15:16), X(19:20), Y(15:16), Y(19:20), K(12),TipoDef);
 F_94 = -F_49;
 F_95 = -F_59;
 F_97 = -F_79;
 F_98 = -F_89;
-F_910 = fuerza(X(17:18), X(19:20), Y(17:18), Y(19:20), K(13));
+F_910 = fuerza(X(17:18), X(19:20), Y(17:18), Y(19:20), K(13),TipoDef);
 F_108 = -F_810;
 F_109 = -F_910;
 
@@ -119,3 +89,4 @@ dy(33:34) = F_79/Mn(7); #pos nodo7
 dy(35:36) = (F_83 + F_84 + F_86 + F_89 + F_810)/Mn(8); #pos nodo8
 dy(37:38) = (F_94 + F_95 + F_97 + F_98 + F_910)/Mn(9); #pos nodo9
 dy(39:40) = (F_108 + F_109)/Mn(10); #pos nodo10
+dy(1:20) = Y(21:40); #v=dx
